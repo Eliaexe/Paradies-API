@@ -1,3 +1,4 @@
+require('dotenv').config();
 const Order = require('../models/Order');
 const Product = require('../models/Product');
 
@@ -5,10 +6,9 @@ const { StatusCodes } = require('http-status-codes');
 const CustomError = require('../errors');
 const { checkPermissions } = require('../utils');
 
-const fakeStripeAPI = async ({ amount, currency }) => {
-  const client_secret = 'someRandomValue';
-  return { client_secret, amount };
-};
+const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
+
+
 
 const createOrder = async (req, res) => {
   const { items: cartItems, tax, shippingFee } = req.body;
@@ -26,15 +26,16 @@ const createOrder = async (req, res) => {
   let subtotal = 0;
 
   for (const item of cartItems) {
-    const dbProduct = await Product.findOne({ _id: item.product });
+    const dbProduct = await Product.findOne({ _id: item._id });
     if (!dbProduct) {
       throw new CustomError.NotFoundError(
-        `No product with id : ${item.product}`
+        `No product with id : ${item._id}`
       );
     }
+
     const { name, price, image, _id } = dbProduct;
     const singleOrderItem = {
-      amount: item.amount,
+      amount: item.quantity,
       name,
       price,
       image,
@@ -43,15 +44,16 @@ const createOrder = async (req, res) => {
     // add item to order
     orderItems = [...orderItems, singleOrderItem];
     // calculate subtotal
-    subtotal += item.amount * price;
+    subtotal += item.quantity * price; 
   }
   // calculate total
   const total = tax + shippingFee + subtotal;
-  // get client secret
-  const paymentIntent = await fakeStripeAPI({
+  // Create a PaymentIntent with Stripe
+  const paymentIntent = await stripe.paymentIntents.create({
     amount: total,
-    currency: 'usd',
+    currency: 'eur',
   });
+
 
   const order = await Order.create({
     orderItems,

@@ -65,7 +65,7 @@ const uploadImage = async (req, res) => {
   if (productImage.size > maxSize) {
     throw new CustomError.BadRequestError(
       'Please upload image smaller than 1MB'
-    );
+    );const stripe = require('stripe')('YOUR_SECRET_KEY');
   }
 
   const imagePath = path.join(

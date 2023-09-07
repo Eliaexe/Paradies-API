@@ -27,6 +27,10 @@ const orderRouter = require('./routes/orderRoutes');
 // middleware
 const notFoundMiddleware = require('./middleware/not-found');
 const errorHandlerMiddleware = require('./middleware/error-handler');
+const corsOptions = {
+  origin: 'http://localhost:5173',
+  credentials: true, 
+};
 
 app.set('trust proxy', 1);
 app.use(
@@ -36,7 +40,7 @@ app.use(
   })
 );
 app.use(helmet());
-app.use(cors());
+app.use(cors(corsOptions));
 app.use(xss());
 app.use(mongoSanitize());
 
@@ -47,7 +51,7 @@ app.use(express.static('./public'));
 app.use(fileUpload());
 
 app.use('/api/v1/auth', authRouter);
-app.use('/api/v1/users', userRouter);
+app.use('/api/v1/profiles', userRouter);
 app.use('/api/v1/products', productRouter);
 app.use('/api/v1/reviews', reviewRouter);
 app.use('/api/v1/orders', orderRouter);

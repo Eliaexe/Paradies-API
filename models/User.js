@@ -3,29 +3,53 @@ const validator = require('validator');
 const bcrypt = require('bcryptjs');
 
 const UserSchema = new mongoose.Schema({
-  name: {
+  first_name: {
+      type: String,
+      required: [true, 'Please provide name'],
+      minlength: 3,
+      maxlength: 50,
+  },
+  last_name: {
     type: String,
     required: [true, 'Please provide name'],
     minlength: 3,
     maxlength: 50,
   },
   email: {
-    type: String,
-    unique: true,
-    required: [true, 'Please provide email'],
-    validate: {
-      validator: validator.isEmail,
-      message: 'Please provide valid email',
-    },
+      type: String,
+      unique: true,
+      required: [true, 'Please provide email'],
+      validate: {
+          validator: validator.isEmail,
+          message: 'Please provide valid email',
+      },
   },
   password: {
-    type: String,
-    required: [true, 'Please provide password'],
-    minlength: 6,
+      type: String,
+      required: [true, 'Please provide password'],
+      minlength: 6,
+  },
+  age: {
+      type: Number,
+      required: [true, 'Please provide age'],
+  },
+  style_of_music: {
+      type: String,
+      required: [true, 'Please provide style of music'],
+  },
+  type_of_user: {
+      type: String,
+      enum: ['client', 'business'],
+      default: 'client',
+  },
+  gender: {
+      type: String,
+      enum: ['male', 'female', 'other'],
+      required: [true, 'Please provide gender'],
   },
   role: {
     type: String,
-    enum: ['admin', 'user'],
+    enum: ['admin', 'business', 'client'],
     default: 'user',
   },
 });
