@@ -23,14 +23,18 @@ const userRouter = require('./routes/userRoutes');
 const productRouter = require('./routes/productRoutes');
 const reviewRouter = require('./routes/reviewRoutes');
 const orderRouter = require('./routes/orderRoutes');
+const checkoutRoute = require('./routes/checkoutRoutes');
 
 // middleware
 const notFoundMiddleware = require('./middleware/not-found');
 const errorHandlerMiddleware = require('./middleware/error-handler');
 const corsOptions = {
-  origin: 'http://localhost:5173',
+  origin: ['http://localhost:5173', 'http://localhost:5000'],
   credentials: true, 
 };
+
+const mongoose = require('mongoose');
+mongoose.set('strictQuery', false);
 
 app.set('trust proxy', 1);
 app.use(
@@ -55,6 +59,7 @@ app.use('/api/v1/profiles', userRouter);
 app.use('/api/v1/products', productRouter);
 app.use('/api/v1/reviews', reviewRouter);
 app.use('/api/v1/orders', orderRouter);
+app.use('/api/v1/checkout', checkoutRoute);
 
 app.use(notFoundMiddleware);
 app.use(errorHandlerMiddleware);
