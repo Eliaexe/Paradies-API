@@ -17,7 +17,7 @@ async function createCheckoutSession(req, res) {
         quantity: product.quantity,
       })),
       mode: 'payment', 
-      success_url: `${process.env.CLIENT_URL}/profile`, 
+      success_url: `${process.env.CLIENT_URL}`, 
       cancel_url: `${process.env.CLIENT_URL}/cart`, 
     });
     
