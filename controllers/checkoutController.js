@@ -20,13 +20,11 @@ async function createCheckoutSession(req, res) {
       success_url: `${process.env.CLIENT_URL}`, 
       cancel_url: `${process.env.CLIENT_URL}/cart`, 
     });
-    
-    // Esegui il console.log dell'URL
-    console.log("URL della pagina di checkout:", session.url);
-
+    const lineItems = session.total_details.line_items;
+    console.log(lineItems);
     // Effettua la reindirizzamento verso la pagina di checkout di Stripe
     // res.redirect(303, session.url);
-    res.status(200).json({ redirectUrl: session.url });
+    res.status(200).json({ redirectUrl: session.url, sessionId: session.id });
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: 'Errore durante la creazione della sessione di checkout' });

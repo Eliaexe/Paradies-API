@@ -24,6 +24,7 @@ const productRouter = require('./routes/productRoutes');
 const reviewRouter = require('./routes/reviewRoutes');
 const orderRouter = require('./routes/orderRoutes');
 const checkoutRoute = require('./routes/checkoutRoutes');
+const stripeRoute = require('./routes/stripeRoutes')
 
 // middleware
 const notFoundMiddleware = require('./middleware/not-found');
@@ -48,7 +49,9 @@ app.use(cors(corsOptions));
 app.use(xss());
 app.use(mongoSanitize());
 
-app.use(express.json());
+app.use(express.json({
+  verify: (req, res, buffer) => (req['rawBody'] = buffer)
+}));
 app.use(cookieParser(process.env.JWT_SECRET));
 
 app.use(express.static('./public'));
@@ -60,6 +63,7 @@ app.use('/api/v1/products', productRouter);
 app.use('/api/v1/reviews', reviewRouter);
 app.use('/api/v1/orders', orderRouter);
 app.use('/api/v1/checkout', checkoutRoute);
+app.use('/api/v1/stripe-webhook', stripeRoute);
 
 app.use(notFoundMiddleware);
 app.use(errorHandlerMiddleware);
