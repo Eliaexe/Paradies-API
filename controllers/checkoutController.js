@@ -1,6 +1,7 @@
 const Stripe = require("stripe");
-
 const stripe = Stripe(process.env.STRIPE_SECRET_KEY);
+
+const { createOrder } = require('./orderController')
 
 async function createCheckoutSession(req, res) {
   try {
@@ -16,12 +17,15 @@ async function createCheckoutSession(req, res) {
         },
         quantity: product.quantity,
       })),
-      mode: 'payment', 
+      mode: 'payment' , 
       success_url: `${process.env.CLIENT_URL}`, 
-      cancel_url: `${process.env.CLIENT_URL}/cart`, 
+      cancel_url: `${process.env.CLIENT_URL}cart`, 
     });
     const lineItems = session.total_details.line_items;
-    console.log(lineItems);
+    const paymentId = session.id
+    // console.log(paymentIntentId);
+    // console.log(req.body);
+    await createOrder(req, res, paymentId)
     // Effettua la reindirizzamento verso la pagina di checkout di Stripe
     // res.redirect(303, session.url);
     res.status(200).json({ redirectUrl: session.url, sessionId: session.id });

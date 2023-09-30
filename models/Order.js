@@ -50,7 +50,11 @@ const OrderSchema = mongoose.Schema(
     },
     validationToken: {
       type: String,
-    }
+    },
+    qrCode: {
+      type: String,
+      required: true, // o false a seconda delle tue esigenze
+    },
   },
   { timestamps: true }
 );
