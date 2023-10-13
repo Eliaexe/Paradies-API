@@ -1,10 +1,11 @@
 require('dotenv').config();
 require('express-async-errors');
-// express
 
+// express
 const express = require('express');
 const app = express();
-// rest of the packages
+
+// Resto dei pacchetti (Middleware e altro)
 const morgan = require('morgan');
 const cookieParser = require('cookie-parser');
 const fileUpload = require('express-fileupload');
@@ -14,10 +15,10 @@ const xss = require('xss-clean');
 const cors = require('cors');
 const mongoSanitize = require('express-mongo-sanitize');
 
-// database
+// Database
 const connectDB = require('./db/connect');
 
-//  routers
+// Routers
 const authRouter = require('./routes/authRoutes');
 const userRouter = require('./routes/userRoutes');
 const productRouter = require('./routes/productRoutes');
@@ -26,9 +27,10 @@ const orderRouter = require('./routes/orderRoutes');
 const checkoutRoute = require('./routes/checkoutRoutes');
 const stripeRoute = require('./routes/stripeRoutes')
 
-// middleware
+// Middleware
 const notFoundMiddleware = require('./middleware/not-found');
 const errorHandlerMiddleware = require('./middleware/error-handler');
+
 const corsOptions = {
   origin: ['http://localhost:5173', 'http://localhost:5000'],
   credentials: true, 
@@ -44,7 +46,17 @@ app.use(
     max: 60,
   })
 );
-app.use(helmet());
+app.use(
+  helmet.contentSecurityPolicy({
+    directives: {
+      defaultSrc: ["'self'"],
+      scriptSrc: ["'self'", 'js.stripe.com', 'eliaexe.github.io'],
+      styleSrc: ["'self'", 'js.stripe.com', 'unsafe-inline'], 
+      imgSrc: ["'self'", 'data:'],
+      fontSrc: ["'self'", 'fonts.googleapis.com'],
+    },
+  })
+);
 app.use(cors(corsOptions));
 app.use(xss());
 app.use(mongoSanitize());

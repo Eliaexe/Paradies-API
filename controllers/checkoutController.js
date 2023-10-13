@@ -17,21 +17,26 @@ async function createCheckoutSession(req, res) {
         },
         quantity: product.quantity,
       })),
-      mode: 'payment' , 
+      mode: 'payment',
       success_url: `${process.env.CLIENT_URL}`, 
-      cancel_url: `${process.env.CLIENT_URL}cart`, 
+      cancel_url: `${process.env.CLIENT_URL}cart`,
+      metadata: {
+        products: JSON.stringify(products), 
+      },
     });
     const lineItems = session.total_details.line_items;
     const paymentId = session.id
     // console.log(paymentIntentId);
     // console.log(req.body);
-    await createOrder(req, res, paymentId)
+    // await createOrder(req, res, paymentId)
     // Effettua la reindirizzamento verso la pagina di checkout di Stripe
     // res.redirect(303, session.url);
     res.status(200).json({ redirectUrl: session.url, sessionId: session.id });
+    return;
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: 'Errore durante la creazione della sessione di checkout' });
+    return;
   }
 }
 
