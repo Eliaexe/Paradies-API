@@ -53,7 +53,7 @@ const OrderSchema = mongoose.Schema(
     },
     qrCode: {
       type: String,
-      required: true, // o false a seconda delle tue esigenze
+      required: true, 
     },
   },
   { timestamps: true }

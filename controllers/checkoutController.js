@@ -7,6 +7,10 @@ async function createCheckoutSession(req, res) {
   try {
     const products = req.body.products; 
     const session = await stripe.checkout.sessions.create({
+      mode: 'payment',
+      customer_email: 'elia@sidori.com',
+      success_url: `${process.env.CLIENT_URL}`, 
+      cancel_url: `${process.env.CLIENT_URL}cart`,
       line_items: products.map(product => ({
         price_data: {
           currency: 'USD', 
@@ -17,16 +21,10 @@ async function createCheckoutSession(req, res) {
         },
         quantity: product.quantity,
       })),
-      mode: 'payment',
-      success_url: `${process.env.CLIENT_URL}`, 
-      cancel_url: `${process.env.CLIENT_URL}cart`,
-      metadata: {
-        products: JSON.stringify(products), 
-      },
+
     });
     const lineItems = session.total_details.line_items;
     const paymentId = session.id
-    // console.log(paymentIntentId);
     // console.log(req.body);
     // await createOrder(req, res, paymentId)
     // Effettua la reindirizzamento verso la pagina di checkout di Stripe
