@@ -19,7 +19,7 @@ const attachCookiesToResponse = ({ res, user }) => {
     expires: new Date(Date.now() + oneDay),
     secure: true, //process.env.NODE_ENV === 'production'
     signed: true,
-    sameSite: 'Lax'
+    sameSite: 'None'
   });
 };
 
