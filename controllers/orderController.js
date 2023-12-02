@@ -64,11 +64,9 @@ const createOrder = async (req, res, clientSecret) => {
       qrCode: qrCodeBase64
     });
 
-
-
     // // Aggiungi il link QR all'ordine
-    // order.qrCode = qrCodeBase64;
-    // await order.save();
+    order.qrCode = qrCodeBase64;
+    await order.save();
 
     res
       .status(StatusCodes.CREATED)
