@@ -75,7 +75,7 @@ const createOrder = async (req, res, clientSecret) => {
     console.error('Errore nella creazione dell\'ordine:', error);
     res
       .status(StatusCodes.INTERNAL_SERVER_ERROR)
-      .json({ error: 'Errore nella creazione dell\'ordine' });
+      .json({ error: 'Errore nella creazione dell\'ordine', error });
   }
 };
 
