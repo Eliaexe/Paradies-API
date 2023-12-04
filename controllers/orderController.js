@@ -48,10 +48,10 @@ const createOrder = async (req, res, clientSecret) => {
 
   const total = tax + shippingFee + subtotal;
   try {
-        // Genera il link QR ora che hai l'ID dell'ordine
-        const qrCodeData = `https://tuo-sito.com/confirm-order?orderId=${clientSecret}`;
-        const qrCodeBuffer = await QRCode.toBuffer(qrCodeData);
-        const qrCodeBase64 = qrCodeBuffer.toString('base64');
+    // Genera il link QR ora che hai l'ID dell'ordine
+    const qrCodeData = `https://tuo-sito.com/confirm-order?orderId=${clientSecret}`;
+    const qrCodeBuffer = await QRCode.toBuffer(qrCodeData);
+    const qrCodeBase64 = qrCodeBuffer.toString('base64');
     // Crea l'ordine
     const order = await Order.create({
       orderItems,
@@ -102,7 +102,7 @@ const getCurrentUserOrders = async (req, res) => {
 
 const updateOrder = async (req, res) => {
   const { id: orderId } = req.params;
-  const { paymentIntentId } = req.body;
+  // const { paymentIntentId } = req.body;
 
   const order = await Order.findOne({ _id: orderId });
   if (!order) {
@@ -110,8 +110,8 @@ const updateOrder = async (req, res) => {
   }
   checkPermissions(req.user, order.user);
 
-  order.paymentIntentId = paymentIntentId;
-  order.status = 'paid';
+  // order.paymentIntentId = paymentIntentId;
+  order.status = 'delivered';
   await order.save();
 
   res.status(StatusCodes.OK).json({ order });
