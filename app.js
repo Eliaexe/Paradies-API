@@ -32,7 +32,7 @@ const notFoundMiddleware = require('./middleware/not-found');
 const errorHandlerMiddleware = require('./middleware/error-handler');
 
 const corsOptions = {
-  origin: ['*'],
+  origin: ['localhost:3000', 'https://nextjs-paradis.vercel.app'],
   credentials: true, 
 };
 
