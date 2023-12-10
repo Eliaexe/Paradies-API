@@ -4,7 +4,7 @@ const router = express.Router();
 const { createPayment } = require('../controllers/paymentController');
 
 router
-    .route('/create')
+    .route('/')
     .post(createPayment);
 
 

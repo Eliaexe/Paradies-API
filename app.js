@@ -26,6 +26,7 @@ const reviewRouter = require('./routes/reviewRoutes');
 const orderRouter = require('./routes/orderRoutes');
 const checkoutRoute = require('./routes/checkoutRoutes');
 const stripeRoute = require('./routes/stripeRoutes')
+const paymentRoutes = require('./routes/paymentRoutes')
 
 // Middleware
 const notFoundMiddleware = require('./middleware/not-found');
@@ -76,7 +77,7 @@ app.use('/api/v1/reviews', reviewRouter);
 app.use('/api/v1/orders', orderRouter);
 app.use('/api/v1/checkout', checkoutRoute);
 app.use('/api/v1/stripe-webhook', paymentRoutes);
-app.use('/api/v1/payment', )
+app.use('/api/v1/payment', paymentRoutes)
 
 app.use(notFoundMiddleware);
 app.use(errorHandlerMiddleware);
