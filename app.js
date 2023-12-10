@@ -75,7 +75,8 @@ app.use('/api/v1/products', productRouter);
 app.use('/api/v1/reviews', reviewRouter);
 app.use('/api/v1/orders', orderRouter);
 app.use('/api/v1/checkout', checkoutRoute);
-app.use('/api/v1/stripe-webhook', stripeRoute);
+app.use('/api/v1/stripe-webhook', paymentRoutes);
+app.use('/api/v1/payment', )
 
 app.use(notFoundMiddleware);
 app.use(errorHandlerMiddleware);
