@@ -27,6 +27,9 @@ const orderRouter = require('./routes/orderRoutes');
 const checkoutRoute = require('./routes/checkoutRoutes');
 const stripeRoute = require('./routes/stripeRoutes')
 const paymentRoutes = require('./routes/paymentRoutes')
+const localsRoutes = require('./routes/localsRoutes')
+
+localsRoutes
 
 // Middleware
 const notFoundMiddleware = require('./middleware/not-found');
@@ -78,6 +81,7 @@ app.use('/api/v1/orders', orderRouter);
 app.use('/api/v1/checkout', checkoutRoute);
 app.use('/api/v1/stripe-webhook', paymentRoutes);
 app.use('/api/v1/payment', paymentRoutes)
+app.use('/api/v1/locals'. localsRoutes)
 
 app.use(notFoundMiddleware);
 app.use(errorHandlerMiddleware);
