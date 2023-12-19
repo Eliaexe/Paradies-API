@@ -8,7 +8,7 @@ const app = express();
 // Resto dei pacchetti (Middleware e altro)
 const morgan = require('morgan');
 const cookieParser = require('cookie-parser');
-const fileUpload = require('express-fileupload');
+// const fileUpload = require('express-fileupload');
 const rateLimiter = require('express-rate-limit');
 const helmet = require('helmet');
 const xss = require('xss-clean');
@@ -71,7 +71,7 @@ app.use(express.json({
 app.use(cookieParser(process.env.JWT_SECRET));
 
 app.use(express.static('./public'));
-app.use(fileUpload());
+// app.use(fileUpload());
 
 app.use('/api/v1/auth', authRouter);
 app.use('/api/v1/profiles', userRouter);
@@ -81,7 +81,7 @@ app.use('/api/v1/orders', orderRouter);
 app.use('/api/v1/checkout', checkoutRoute);
 app.use('/api/v1/stripe-webhook', paymentRoutes);
 app.use('/api/v1/payment', paymentRoutes)
-app.use('/api/v1/locals'. localsRoutes)
+app.use('/api/v1/locals', localsRoutes)
 
 app.use(notFoundMiddleware);
 app.use(errorHandlerMiddleware);
