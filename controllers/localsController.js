@@ -7,8 +7,9 @@ const { checkPermissions } = require('../utils');
 
 const getAllLocals = async (req, res) => {
     const locals = Local.find({})
-    console.log(locals)
-    res.status(StatusCodes.OK).json({locals, count: locals.length})
+    const localsData = locals.map(local => local.toJSON());
+    console.log(JSON.parse(localsData))
+    res.status(StatusCodes.OK).json({localsData, count: localsData.length})
 }
 
 const getLocal = async (req, res) => {
