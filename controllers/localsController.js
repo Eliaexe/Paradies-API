@@ -7,6 +7,7 @@ const { checkPermissions } = require('../utils');
 
 const getAllLocals = async (req, res) => {
     const locals = Local.find({})
+    console.log(locals)
     res.status(StatusCodes.OK).json({locals, count: locals.length})
 }
 
