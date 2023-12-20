@@ -6,11 +6,16 @@ const CustomError = require('../errors');
 const { checkPermissions } = require('../utils');
 
 const getAllLocals = async (req, res) => {
-    const locals = Local.find({})
-    const localsData = locals.map(local => local.toJSON());
-    console.log(JSON.parse(localsData))
-    res.status(StatusCodes.OK).json({localsData, count: localsData.length})
-}
+    try {
+        const locals = await Local.find({});
+        const localsData = locals.map(local => local.toJSON());
+        // console.log(JSON.parse(JSON.stringify(localsData)));  // Parse dopo stringify per evitare problemi di riferimenti circolari
+        res.status(StatusCodes.OK).json({ localsData, count: localsData.length });
+    } catch (error) {
+        console.error(error);
+        res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ error: 'Errore durante la ricerca dei locali.' });
+    }
+};
 
 const getLocal = async (req, res) => {
     const { name: localName } = req.params;
