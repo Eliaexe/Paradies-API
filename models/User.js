@@ -24,11 +24,6 @@ const UserSchema = new mongoose.Schema({
           message: 'Please provide valid email',
       },
   },
-  password: {
-      type: String,
-      required: [true, 'Please provide password'],
-      minlength: 6,
-  },
   age: {
       type: Number,
       required: [true, 'Please provide age'],
@@ -52,18 +47,57 @@ const UserSchema = new mongoose.Schema({
     enum: ['admin', 'business', 'client'],
     default: 'user',
   },
+  password: {
+    type: String,
+    required: function() {
+      return this.passwordRequired;
+    },
+    minlength: 6,
+  },
+  instagramId: {
+    type: String,
+    unique: true,
+    sparse: true,
+  },
+  facebookId: {
+    type: String,
+    unique: true,
+    sparse: true,
+  },
+  snapchatId: {
+    type: String,
+    unique: true,
+    sparse: true,
+  },
+  googleId: {
+    type: String,
+    unique: true,
+    sparse: true,
+  },
+  appleId: {
+    type: String,
+    unique: true,
+    sparse: true,
+  },
+  // Altri campi per gli ID dei social network
+  passwordRequired: {
+    type: Boolean,
+    default: true,
+  },
 });
 
 UserSchema.pre('save', async function () {
-  // console.log(this.modifiedPaths());
-  // console.log(this.isModified('name'));
-  if (!this.isModified('password')) return;
+  if (!this.isModified('password') || !this.passwordRequired) return;
   const salt = await bcrypt.genSalt(10);
   this.password = await bcrypt.hash(this.password, salt);
 });
 
-UserSchema.methods.comparePassword = async function (canditatePassword) {
-  const isMatch = await bcrypt.compare(canditatePassword, this.password);
+UserSchema.methods.comparePassword = async function (candidatePassword) {
+  if (!this.passwordRequired) {
+    // Se la password non è richiesta, restituisci true
+    return true;
+  }
+  const isMatch = await bcrypt.compare(candidatePassword, this.password);
   return isMatch;
 };
 
