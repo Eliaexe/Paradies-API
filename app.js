@@ -14,7 +14,8 @@ const helmet = require('helmet');
 const xss = require('xss-clean');
 const cors = require('cors');
 const mongoSanitize = require('express-mongo-sanitize');
-const passportConfig = require('./passport-config');
+// Passport
+const passportConfig = require('./config/passport-config');
 
 // Database
 const connectDB = require('./db/connect');
