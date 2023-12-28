@@ -5,19 +5,19 @@ const SnapchatStrategy = require('passport-snapchat').Strategy;
 const FacebookStrategy = require('passport-facebook').Strategy;
 const AppleStrategy = require('passport-apple').Strategy;
 const { each } = require('mongoose/lib/utils');
-const User = require('./models/User'); // Assicurati di avere un modello User nel tuo progetto
+const User = require('../models/User'); 
 
-const authType = [instagram, google, snapchat, facebook, apple]
+const authType = ['instagram', 'google', 'snapchat', 'facebook', 'apple']
 
 const authenticationStrategies = authType.map(e => {
-  const capitalizedStrategy = `${e.charAt(0).toUpperCase() + e.slice(1)}Strategy`;
+  const strategy = require(`passport-${e}`).Strategy
 
   return {
     name: e,
-    strategy: capitalizedStrategy,
+    strategy: strategy,
     options: {
-      clientID: `your-${e}-client-id`,
-      clientSecret: `your-${e}-client-secret`,
+      clientID: process.env[`PUBLIC${e}KEY`],
+      clientSecret: process.env[`PRIVATE${e}KEY`],
       callbackURL: `http://localhost:5000/auth/${e}/callback`
     },
     callback: (accessToken, refreshToken, profile, done) => {
