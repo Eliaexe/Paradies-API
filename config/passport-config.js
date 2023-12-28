@@ -16,8 +16,8 @@ const authenticationStrategies = authType.map(e => {
     name: e,
     strategy: strategy,
     options: {
-      clientID: process.env[`PUBLIC_${e}_KEY`],
-      clientSecret: process.env[`PRIVATE_${e}_KEY`],
+      clientID: process.env[`PUBLIC_${e.toUpperCase()}_KEY`],
+      clientSecret: process.env[`PRIVATE_${e.toUpperCase()}_KEY`],
       callbackURL: `${process.env.CLIENT_URL}auth/${e}/callback`
     },
     callback: (accessToken, refreshToken, profile, done) => {
