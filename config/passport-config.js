@@ -16,9 +16,9 @@ const authenticationStrategies = authType.map(e => {
     name: e,
     strategy: strategy,
     options: {
-      clientID: process.env[`PUBLIC${e}KEY`],
-      clientSecret: process.env[`PRIVATE${e}KEY`],
-      callbackURL: `http://localhost:5000/auth/${e}/callback`
+      clientID: process.env[`PUBLIC_${e}_KEY`],
+      clientSecret: process.env[`PRIVATE_${e}_KEY`],
+      callbackURL: `${process.env.CLIENT_URL}auth/${e}/callback`
     },
     callback: (accessToken, refreshToken, profile, done) => {
       // Implementa la logica per trovare o creare l'utente nel database
