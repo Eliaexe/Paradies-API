@@ -30,10 +30,6 @@ const ProductSchema = new mongoose.Schema(
     company: {
       type: String,
       required: [true, 'Please provide company'],
-      enum: {
-        values: ['despe', 'jesepa', 'absolute'],
-        message: '{VALUE} is not supported',
-      },
     },
     inventory: {
       type: Number,

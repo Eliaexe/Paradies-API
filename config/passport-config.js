@@ -10,13 +10,13 @@ const User = require('../models/User');
 const authType = ['instagram', 'google', 'snapchat', 'facebook', 'apple']
 
 const authenticationStrategies = authType.map(e => {
-  const strategy = require(`passport-${e}`).Strategy
+  const strategy = require(`${e.charAt(0).toUpperCase() + se.slice(1).toLowerCase()}Strategy`).Strategy
 
   return {
     name: e,
     strategy: strategy,
     options: {
-      clientID: process.env[`PUBLIC_${e.toUpperCase()}_KEY`],
+      clientID: process.env[`PUBLIC_${e.toUpperCase()}_ID`],
       clientSecret: process.env[`PRIVATE_${e.toUpperCase()}_KEY`],
       callbackURL: `${process.env.CLIENT_URL}auth/${e}/callback`
     },

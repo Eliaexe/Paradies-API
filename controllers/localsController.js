@@ -42,7 +42,7 @@ const updateLocal = async (req, res) => {
     });
 
     if (!local) {
-    throw new CustomError.NotFoundError(`No local with id : ${localId}`);
+        throw new CustomError.NotFoundError(`No local with id : ${localId}`);
     }
 
     res.status(StatusCodes.OK).json({ local });
