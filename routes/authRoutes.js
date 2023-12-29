@@ -13,8 +13,8 @@ router.get('/logout', logout);
 const authType = ['instagram', 'google', 'snapchat', 'facebook', 'apple']
 
 authType.forEach(e => {
-    router.get(`/auth/${e}`, passport.authenticate(e));
-    router.get(`/auth/${e}/callback`,
+    router.get(`/${e}`, passport.authenticate(e));
+    router.get(`/${e}/callback`,
     passport.authenticate(e, { failureRedirect: '/login' }), (req, res) => {
         res.status(StatusCodes.OK).json({ msg: 'Authenticated!' });    
     }
