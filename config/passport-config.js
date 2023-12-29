@@ -10,7 +10,7 @@ const User = require('../models/User');
 const authType = ['instagram', 'google', 'snapchat', 'facebook', 'apple']
 
 const authenticationStrategies = authType.map(e => {
-  const strategy = require(`${e.charAt(0).toUpperCase() + se.slice(1).toLowerCase()}Strategy`).Strategy
+  const strategy = require(`${e.charAt(0).toUpperCase() + e.slice(1).toLowerCase()}Strategy`).Strategy
 
   return {
     name: e,
