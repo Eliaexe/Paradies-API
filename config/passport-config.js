@@ -11,8 +11,7 @@ const authType = ['snapchat']
 // ,'instagram', 'google', 'facebook', 'apple'
 
 const authenticationStrategies = authType.map(e => {
-  const strategy = (`${e.charAt(0).toUpperCase() + e.slice(1).toLowerCase()}Strategy`).Strategy
-
+  const strategy = require(`${e.charAt(0).toUpperCase() + e.slice(1).toLowerCase()}Strategy`);
   return {
     name: e,
     strategy: strategy,
