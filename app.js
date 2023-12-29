@@ -15,6 +15,7 @@ const xss = require('xss-clean');
 const cors = require('cors');
 const mongoSanitize = require('express-mongo-sanitize');
 // Passport
+const passport = require('passport');  
 const passportConfig = require('./config/passport-config');
 
 // Database
@@ -30,8 +31,6 @@ const checkoutRoute = require('./routes/checkoutRoutes');
 const stripeRoute = require('./routes/stripeRoutes')
 const paymentRoutes = require('./routes/paymentRoutes')
 const localsRoutes = require('./routes/localsRoutes')
-
-localsRoutes
 
 // Middleware
 const notFoundMiddleware = require('./middleware/not-found');
