@@ -32,11 +32,6 @@ const UserSchema = new mongoose.Schema({
       type: String,
       required: [true, 'Please provide style of music'],
   },
-  type_of_user: {
-      type: String,
-      enum: ['client', 'business'],
-      default: 'client',
-  },
   gender: {
       type: String,
       enum: ['male', 'female', 'other'],
