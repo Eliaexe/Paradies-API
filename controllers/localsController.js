@@ -29,13 +29,13 @@ const getLocal = async (req, res) => {
 }
 
 const getOwnerLocal = async (req, res) => {
-    const { ownerId } = req.params.id;
+    const { id } = req.params;
 
     try {
-        const local = await Local.find({ owner: ownerId });
+        const local = await Local.find({ owner: id });
 
         if (!local || local.length === 0) {
-            throw new CustomError.NotFoundError(`No local with the owner ID ${ownerId}`);
+            throw new CustomError.NotFoundError(`No local with the owner ID ${id}`);
         }
 
         res.status(StatusCodes.OK).json({ local });
