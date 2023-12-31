@@ -29,7 +29,7 @@ const getLocal = async (req, res) => {
 }
 
 const getOwnerLocal = async (req, res) => {
-    const { ownerId } = req.params;
+    const { ownerId } = req.params.id;
 
     try {
         const local = await Local.find({ owner: ownerId });
