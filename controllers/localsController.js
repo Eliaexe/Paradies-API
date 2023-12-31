@@ -28,6 +28,17 @@ const getLocal = async (req, res) => {
     res.status(StatusCodes.OK).json({ local });
 }
 
+const getOwnerLocal = async (res, req) => {
+    const {owner: ownerId} = req.params
+
+    const local = Local.find({ owner: ownerId })
+    if (!local) {
+        throw new CustomError.NotFoundError(`No local with the name ${local}`);
+    }
+    
+    res.status(StatusCodes.OK).json({ local });
+}
+
 const createLocal = async (req, res) => {
     const local = await Local.create(req.body)
     res.status(StatusCodes.CREATED).json({ local })
@@ -64,6 +75,7 @@ const deleteLocal = async (req, res) => {
 module.exports = {
     getAllLocals, 
     getLocal, 
+    getOwnerLocal,
     createLocal,
     updateLocal, 
     deleteLocal

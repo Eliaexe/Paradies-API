@@ -8,6 +8,7 @@ const {
 
 const { getAllLocals, 
         getLocal, 
+        getOwnerLocal,
         createLocal,
         updateLocal, 
         deleteLocal
@@ -22,6 +23,10 @@ router
 router
     .route('/:id')
     .get(getLocal)
+
+router
+    .route('/owner/:id')
+    .get(getOwnerLocal)
     .patch([authenticateUser, authorizePermissions('business')], updateLocal)
 
 module.exports = router
