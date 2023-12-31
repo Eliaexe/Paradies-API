@@ -22,6 +22,6 @@ router
 router
     .route('/:id')
     .get(getLocal)
-    .patch([authenticateUser, authorizePermissions('admin')], updateLocal)
+    .patch([authenticateUser, authorizePermissions('business')], updateLocal)
 
 module.exports = router
