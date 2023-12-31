@@ -16,8 +16,8 @@ const { getAllLocals,
 router
     .route('/')
     .get(getAllLocals)
-    .post([authenticateUser, authorizePermissions('admin')], createLocal)
-    .delete([authenticateUser, authorizePermissions('admin')], deleteLocal)
+    .post([authenticateUser, authorizePermissions('business')], createLocal)
+    .delete([authenticateUser, authorizePermissions('business')], deleteLocal)
 
 router
     .route('/:id')
