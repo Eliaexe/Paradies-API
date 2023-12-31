@@ -25,6 +25,7 @@ const LocalSchema = new mongoose.Schema(
       inventory: {
         type: Object,
         default: {},
+        required: true
       },
       owner: {
         type: mongoose.Types.ObjectId,
