@@ -28,16 +28,23 @@ const getLocal = async (req, res) => {
     res.status(StatusCodes.OK).json({ local });
 }
 
-const getOwnerLocal = async (res, req) => {
-    const {owner: ownerId} = req.params
+const getOwnerLocal = async (req, res) => {
+    const { ownerId } = req.params;
 
-    const local = Local.find({ owner: ownerId })
-    if (!local) {
-        throw new CustomError.NotFoundError(`No local with the name ${local}`);
+    try {
+        const local = await Local.find({ owner: ownerId });
+
+        if (!local || local.length === 0) {
+            throw new CustomError.NotFoundError(`No local with the owner ID ${ownerId}`);
+        }
+
+        res.status(StatusCodes.OK).json({ local });
+    } catch (error) {
+        console.error(error);
+        res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ error: 'Error fetching owner local' });
     }
-    
-    res.status(StatusCodes.OK).json({ local });
-}
+};
+
 
 const createLocal = async (req, res) => {
     const local = await Local.create(req.body)
