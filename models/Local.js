@@ -23,9 +23,8 @@ const LocalSchema = new mongoose.Schema(
         default: '/uploads/example.jpeg',
       },
       inventory: {
-        type: Number,
-        required: true,
-        default: 15,
+        type: Object,
+        default: {},
       },
       owner: {
         type: mongoose.Types.ObjectId,
