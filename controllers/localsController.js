@@ -52,7 +52,7 @@ const createLocal = async (req, res) => {
 }
 
 const updateLocal = async (req, res) => {
-    const { _id: localId } = req.params;
+    const { id: localId } = req.params;
 
     const local = await Local.findOneAndUpdate({ _id: localId }, req.body, {
         new: true,
