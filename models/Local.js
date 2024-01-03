@@ -25,7 +25,7 @@ const LocalSchema = new mongoose.Schema(
       },
       inventory: {
         type: [ProductSchema],
-        default: {},
+        default: [],
         required: true
       },
       owner: {
