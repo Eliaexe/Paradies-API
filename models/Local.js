@@ -1,4 +1,5 @@
 const mongoose = require('mongoose')
+const ProductSchema = require('./product');
 
 const LocalSchema = new mongoose.Schema(
     {
