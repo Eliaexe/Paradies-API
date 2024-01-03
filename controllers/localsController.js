@@ -20,7 +20,7 @@ const getAllLocals = async (req, res) => {
 const getLocal = async (req, res) => {
     const { id: localsId } = req.params;
 
-    const local = Local.find({ id: localsId })
+    const local = Local.find({ _id: localsId })
     if (!local) {
         throw new CustomError.NotFoundError(`No local with the id ${local}`);
     }
