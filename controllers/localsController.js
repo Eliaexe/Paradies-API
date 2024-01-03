@@ -19,16 +19,20 @@ const getAllLocals = async (req, res) => {
 
 const getLocal = async (req, res) => {
     const { id: localsId } = req.params;
-    const local = Local.find({ _id: localsId })
-    if (!local) {
-      throw new CustomError.NotFoundError(`No local with the id ${local}`);
+  
+    try {
+      const local = await Local.findById(localsId).lean();
+  
+      if (!local) {
+        throw new CustomError.NotFoundError(`No local with the id ${localsId}`);
+      }
+   
+      res.status(StatusCodes.OK).json({ local });
+    } catch (error) {
+      console.error('Error fetching local:', error);
+      res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ error: 'Internal Server Error' });
     }
-    
-    local.sessionPool = null; // Detach the circular reference
-    
-    res.status(StatusCodes.OK).json({ local });
-    
-}
+  };
 
 const getOwnerLocal = async (req, res) => {
     const { id } = req.params;
