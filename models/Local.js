@@ -48,7 +48,6 @@ const LocalSchema = new mongoose.Schema(
           category: {
             type: String,
             required: [true, 'Please provide product category'],
-            enum: ['drink', 'soft', 'cocktails', 'ticket'],
           },
           company: {
             type: String,
