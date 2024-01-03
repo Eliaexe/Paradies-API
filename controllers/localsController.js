@@ -18,11 +18,11 @@ const getAllLocals = async (req, res) => {
 };
 
 const getLocal = async (req, res) => {
-    const { name: localName } = req.params;
+    const { id: localsId } = req.params;
 
-    const local = Local.find({ name: localName })
+    const local = Local.find({ id: localsId })
     if (!local) {
-        throw new CustomError.NotFoundError(`No local with the name ${local}`);
+        throw new CustomError.NotFoundError(`No local with the id ${local}`);
     }
     
     res.status(StatusCodes.OK).json({ local });
