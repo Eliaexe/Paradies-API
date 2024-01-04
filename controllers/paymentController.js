@@ -3,7 +3,6 @@ const https = require('https');
 const createPayment = (req, res) => {
     const { order_id, amount } = req.body;
     const apiUrl = 'https://api.paytweak.dev/v1/links';
-    const workToken = process.env.PAYTWEAK_SECRET_KEY;
 
     const postData = JSON.stringify({
         order_id: order_id,
@@ -18,7 +17,7 @@ const createPayment = (req, res) => {
         path: '/v1/links',
         method: 'POST',
         headers: {
-            'Paytweak-Token': workToken,
+            'Paytweak-Token': process.env.PAYTWEAK_SECRET_KEY,
             'Content-Type': 'application/json',
             'Content-Length': postData.length,
         },
@@ -34,7 +33,7 @@ const createPayment = (req, res) => {
 
         response.on('end', () => {
             if (response.statusCode === 403) {
-                res.status(403).json({ status: 'error', message: 'Accesso non autorizzato' });
+                res.status(403).json({ status: 'error', message: `Accesso non autorizzato per il token ${process.env.PAYTWEAK_SECRET_KEY}` });
             } else {
                 res.status(200).json({ status: 'ok', data });
             }
