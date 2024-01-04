@@ -11,42 +11,35 @@ const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
 
 // Definisci la funzione per creare un nuovo ordine con codice QR
 const createOrderWithQR = async (paymentID) => {
-    const paymentIntent = await stripe.paymentIntents.retrieve(
-        paymentID
-    );
+  try {
+    const newOrder = new Order({
+      // Altri campi dell'ordine
+      // ...
+    });
 
-    // return(paymentIntent.amaunt_details)
-    console.log(paymentIntent);
-        try {
-    // Crea il tuo ordine con i dettagli appropriati
-    // const newOrder = new Order({
-    //   // Altri campi dell'ordine
-    //   // ...
-    // });
+    // Salva l'ordine nel database
+    await newOrder.save();
 
-    // // Salva l'ordine nel database
-    // await newOrder.save();
+    // Genera un codice QR basato sull'ID dell'ordine
+    const qrData = newOrder._id.toString();
+    const qrCode = await qrcode.toDataURL(qrData);
 
-    // // Genera un codice QR basato sull'ID dell'ordine
-    // const qrData = newOrder._id.toString();
-    // const qrCode = await qrcode.toDataURL(qrData);
+    // Crea un documento del codice QR nel database
+    const newQRCode = new QRCode({
+      code: qrCode,
+      // Altri metadati se necessario
+      // ...
+    });
 
-    // // Crea un documento del codice QR nel database
-    // const newQRCode = new QRCode({
-    //   code: qrCode,
-    //   // Altri metadati se necessario
-    //   // ...
-    // });
+    // Salva il codice QR nel database
+    await newQRCode.save();
 
-    // // Salva il codice QR nel database
-    // await newQRCode.save();
+    // Associa il codice QR all'ordine
+    newOrder.qrCodeId = newQRCode._id;
+    await newOrder.save();
 
-    // // Associa il codice QR all'ordine
-    // newOrder.qrCodeId = newQRCode._id;
-    // await newOrder.save();
-
-    // // Restituisci l'ordine creato
-    // return newOrder;
+    // Restituisci l'ordine creato
+    return newOrder;
   } catch (error) {
     console.error(error);
     throw new Error('Errore nella creazione dell\'ordine');

@@ -14,27 +14,21 @@ const SingleOrderItemSchema = mongoose.Schema({
 
 const OrderSchema = mongoose.Schema(
   {
-    tax: {
-      type: Number,
-      required: true,
-    },
-    shippingFee: {
-      type: Number,
-      required: true,
-    },
-    subtotal: {
-      type: Number,
-      required: true,
-    },
     total: {
       type: Number,
       required: true,
+    },
+    local: {
+      type: mongoose.Schema.ObjectId,
+      ref: 'Local',
+      require: true,
     },
     orderItems: [SingleOrderItemSchema],
     status: {
       type: String,
       enum: ['pending', 'failed', 'paid', 'delivered', 'canceled'],
       default: 'pending',
+      required: true
     },
     user: {
       type: mongoose.Schema.ObjectId,
