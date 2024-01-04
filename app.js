@@ -15,8 +15,8 @@ const xss = require('xss-clean');
 const cors = require('cors');
 const mongoSanitize = require('express-mongo-sanitize');
 // Passport
-const passport = require('passport');  
-const passportConfig = require('./config/passport-config');
+// const passport = require('passport');  
+// const passportConfig = require('./config/passport-config');
 
 // Database
 const connectDB = require('./db/connect');
@@ -76,7 +76,7 @@ app.use(express.static('./public'));
 
 // Auth whit Passport.js 
 
-passportConfig(passport);
+// passportConfig(passport);
 
 app.use('/api/v1/auth', authRouter);
 app.use('/api/v1/profiles', userRouter);
