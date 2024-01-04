@@ -52,12 +52,8 @@ const LocalSchema = new mongoose.Schema(
           quantity: {
             type: Number,
             required: true,
-            default: 15,
-          },
-          id: {
-            type: mongoose.ObjectId,
-            required: true,
-          },
+            default: 1,
+          }
         },
       ],
       owner: {
