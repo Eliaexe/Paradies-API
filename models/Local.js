@@ -49,17 +49,13 @@ const LocalSchema = new mongoose.Schema(
             type: String,
             required: [true, 'Please provide product category'],
           },
-          company: {
-            type: String,
-            required: [true, 'Please provide company'],
-          },
           quantity: {
             type: Number,
             required: true,
             default: 15,
           },
           id: {
-            type: mongoose.Types.ObjectId,
+            type: mongoose.ObjectId,
             required: true,
           },
         },
