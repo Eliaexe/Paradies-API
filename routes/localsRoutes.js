@@ -11,7 +11,8 @@ const { getAllLocals,
         getOwnerLocal,
         createLocal,
         updateLocal, 
-        deleteLocal
+        deleteLocal,
+        uploadImage
       } = require('../controllers/localsController.js')
 
 router

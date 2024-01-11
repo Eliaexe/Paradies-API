@@ -49,22 +49,23 @@ const createOrder = async (req, res, clientSecret) => {
   }
   
   try {
-    // Generate QR code link
-    const qrCodeData = `https://tuo-sito.com/confirm-order?orderId=${total}`;
-    const qrCodeBuffer = await QRCode.toBuffer(qrCodeData);
-    const qrCodeBase64 = qrCodeBuffer.toString('base64');
-
-    // Create an order
     const order = await Order.create({
       orderItems,
       total,
       local: localId,
       clientSecret: `${localId}%${customerId}%${Date.now()}`,
       user: customerId,
-      qrCode: qrCodeBase64,
     });
-
-    // Add the QR code link to the order
+    
+    // Ottieni l'ID generato da MongoDB dopo la creazione dell'ordine
+    const orderId = order._id;
+    
+    // Genera il link del codice QR con l'ID di MongoDB
+    const qrCodeData = `https://paradies-api.onrender.com/confirm-order?orderId=${orderId}`;
+    const qrCodeBuffer = await QRCode.toBuffer(qrCodeData);
+    const qrCodeBase64 = qrCodeBuffer.toString('base64');
+    
+    // Aggiungi il link del codice QR all'ordine e salvalo
     order.qrCode = qrCodeBase64;
     await order.save();
 
@@ -122,10 +123,28 @@ const updateOrder = async (req, res) => {
   res.status(StatusCodes.OK).json({ order });
 };
 
+const confirmOrder = async (req, res) => {
+  const { id: orderId } = req.query;
+
+  const order = await Order.findOne({ _id: orderId });
+  if (!order) {
+    throw new CustomError.NotFoundError(`No order with id : ${orderId}`);
+  }
+    // checkPermissions(req.user, order.user);
+
+
+  order.status = 'delivered';
+
+  await order.save();
+
+  res.status(StatusCodes.OK).json({ order });
+}
+
 module.exports = {
   getAllOrders,
   getSingleOrder,
   getCurrentUserOrders,
   createOrder,
   updateOrder,
+  confirmOrder
 };

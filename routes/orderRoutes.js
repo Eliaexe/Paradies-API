@@ -11,6 +11,7 @@ const {
   getCurrentUserOrders,
   createOrder,
   updateOrder,
+  confirmOrder
 } = require('../controllers/orderController');
 
 router
@@ -26,6 +27,7 @@ router
 router
   .route('/:id')
   .get(authenticateUser, getSingleOrder)
+  .get(authenticateUser, confirmOrder)
   .patch(authenticateUser, updateOrder);
 
 module.exports = router;
