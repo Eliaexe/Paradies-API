@@ -30,4 +30,8 @@ router
   .get(authenticateUser, confirmOrder)
   .patch(authenticateUser, updateOrder);
 
+router
+  .route('/confirmOrder')
+  .get(authenticateUser, authorizePermissions('business'), confirmOrder)
+
 module.exports = router;

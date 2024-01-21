@@ -26,22 +26,44 @@ const showCurrentUser = async (req, res) => {
   res.status(StatusCodes.OK).json({ user: req.user });
 };
 // update user with user.save()
+
 const updateUser = async (req, res) => {
-  const { email, name } = req.body;
-  if (!email || !name) {
-    throw new CustomError.BadRequestError('Please provide all values');
+  const { first_name, last_name, email, age, style_of_music, _id } = req.body;
+
+  // Verifica che i campi essenziali siano presenti
+  if (!_id || !email || !first_name || !last_name) {
+      throw new CustomError.BadRequestError('Please provide all values');
   }
-  const user = await User.findOne({ _id: req.user.userId });
+  
+  // Cerca l'utente nel database
+  const user = await User.findOne({ _id }).select('-password');;
 
+  // Verifica se l'utente esiste
+  if (!user) {
+      throw new CustomError.NotFoundError('User not found');
+  }
+  
+  // Aggiorna l'oggetto user con i nuovi valori
   user.email = email;
-  user.name = name;
-
+  user.first_name = first_name;
+  user.last_name = last_name;
+  user.age = age;
+  user.style_of_music = style_of_music;
+  
+  // Salva le modifiche nel database
   await user.save();
 
+  // Crea il token dell'utente aggiornato
   const tokenUser = createTokenUser(user);
+
+  // Allega i cookie alla risposta
   attachCookiesToResponse({ res, user: tokenUser });
-  res.status(StatusCodes.OK).json({ user: tokenUser });
+
+  // Restituisci l'utente aggiornato nella risposta
+  res.status(StatusCodes.OK).json({ user });
 };
+
+
 const updateUserPassword = async (req, res) => {
   const { oldPassword, newPassword } = req.body;
   if (!oldPassword || !newPassword) {
