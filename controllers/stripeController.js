@@ -26,11 +26,11 @@ const webhookHandlers = {
       }
     );
 
-    console.log(retriveSession);
+    // console.log(retriveSession);
   },
   'payment_intent.payment_failed': async (data) => {
     // Aggiungi la tua logica di business qui
-    console.log('Fail:', data);
+    // console.log('Fail:', data);
   },
 };
 

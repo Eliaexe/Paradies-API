@@ -65,7 +65,7 @@ const createOrder = async (req, res, clientSecret) => {
       order.qrCode = qrCodeBase64;
       await order.save();
   
-      console.log('Order created successfully:', order);
+      // console.log('Order created successfully:', order);
   
       res.status(StatusCodes.CREATED).json({
         success: true,
