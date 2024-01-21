@@ -131,17 +131,22 @@ const updateOrder = async (req, res) => {
 const confirmOrder = async (req, res) => {
   const { id: orderId } = req.params;
 
-  const order = await Order.findOne({ _id: orderId });
-  if (!order) {
-    throw new CustomError.NotFoundError(`No order with id : ${orderId}`);
+  try {
+    const order = await Order.findOne({ _id: orderId });
+    if (!order) {
+      throw new CustomError.NotFoundError(`No order with id: ${orderId}`);
+    }
+
+    order.status = 'delivered';
+
+    await order.save();
+
+    res.status(StatusCodes.OK).json({ order });
+  } catch (error) {
+    console.error('Error confirming order:', error.message);
+    res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ error: 'Internal Server Error' });
   }
-
-  order.status = 'delivered';
-
-  await order.save();
-
-  res.status(StatusCodes.OK).json({ order });
-}
+};
 
 module.exports = {
   getAllOrders,
