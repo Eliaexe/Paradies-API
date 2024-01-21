@@ -31,7 +31,7 @@ router
   .patch(authenticateUser, updateOrder);
 
 router
-  .route('/confirmOrder')
+  .route('/confirmOrder/:id')
   .get(authenticateUser, authorizePermissions('business'), confirmOrder)
 
 module.exports = router;
