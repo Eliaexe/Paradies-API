@@ -129,7 +129,7 @@ const updateOrder = async (req, res) => {
 };
 
 const confirmOrder = async (req, res) => {
-  const { id: orderId } = req.query;
+  const { id: orderId } = req.params;
 
   const order = await Order.findOne({ _id: orderId });
   if (!order) {
