@@ -71,6 +71,10 @@ const createOrder = async (req, res, clientSecret) => {
         success: true,
         data: { order, clientSecret: order.clientSecret },
       });
+
+      // res.status(StatusCodes.CREATED).json({
+      //   success: true,
+      // });
     } catch (error) {
       console.error('Error creating order:', error);
   
