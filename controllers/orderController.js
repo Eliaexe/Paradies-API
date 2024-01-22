@@ -58,7 +58,7 @@ const createOrder = async (req, res, clientSecret) => {
   
       const orderId = order._id;
   
-      const qrCodeData = `https://paradies-api.onrender.com/api/v1/orders/confirmOrder?id=${orderId}`;
+      const qrCodeData = `https://paradies-api.onrender.com/api/v1/orders/confirmOrder/id=${orderId}`;
       const qrCodeBuffer = await QRCode.toBuffer(qrCodeData);
       const qrCodeBase64 = qrCodeBuffer.toString('base64');
   
@@ -71,10 +71,6 @@ const createOrder = async (req, res, clientSecret) => {
         success: true,
         data: { order, clientSecret: order.clientSecret },
       });
-
-      // res.status(StatusCodes.CREATED).json({
-      //   success: true,
-      // });
     } catch (error) {
       console.error('Error creating order:', error);
   
@@ -87,7 +83,6 @@ const createOrder = async (req, res, clientSecret) => {
       });
     }
 }
-  
 
 const getAllOrders = async (req, res) => {
   const orders = await Order.find({});
