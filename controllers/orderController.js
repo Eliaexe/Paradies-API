@@ -58,7 +58,7 @@ const createOrder = async (req, res, clientSecret) => {
   
       const orderId = order._id;
   
-      const qrCodeData = `https://paradies-api.onrender.com/api/v1/orders/confirmOrder/id=${orderId}`;
+      const qrCodeData = `https://paradies-api.onrender.com/api/v1/orders/confirmOrder/${orderId}`;
       const qrCodeBuffer = await QRCode.toBuffer(qrCodeData);
       const qrCodeBase64 = qrCodeBuffer.toString('base64');
   
