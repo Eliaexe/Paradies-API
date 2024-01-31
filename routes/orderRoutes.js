@@ -32,6 +32,6 @@ router
 
   router
   .route('/confirmOrder/:id')
-  .get(authenticateUser, authorizePermissions('business'), confirmOrder);
+  .get(authenticateUser, confirmOrder);
 
 module.exports = router;

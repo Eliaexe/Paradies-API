@@ -1,53 +1,17 @@
 const https = require('https');
+require('dotenv').config();
+const PaytweakWrapper = require('./paytweak'); // Assicurati di fornire il percorso corretto al tuo file PaytweakWrapper
 
 const createPayment = (req, res) => {
-    const { order_id, amount } = req.body;
-    const apiUrl = 'https://api.paytweak.dev/v1/links';
 
-    const postData = JSON.stringify({
-        order_id: order_id,
-        amount: amount,
-        lang: 'FR',
-        cur: 'EUR',
-    });
+  // Example usage
+  console.log(process.env.PAYTWEAK_PUBLIC_KEY);
+  const paytweak = new PaytweakWrapper(process.env.PAYTWEAK_PUBLIC_KEY, process.env.PAYTWEAK_SECRET_KEY);
+  paytweak.apiConnect();
 
-    const options = {
-        hostname: 'api.paytweak.dev',
-        port: 443,
-        path: '/v1/links',
-        method: 'POST',
-        headers: {
-            'Paytweak-Token': process.env.PAYTWEAK_SECRET_KEY,
-            'Content-Type': 'application/json',
-            'Content-Length': postData.length,
-        },
-        rejectUnauthorized: true,
-    };
 
-    const request = https.request(options, (response) => {
-        let data = '';
-
-        response.on('data', (chunk) => {
-            data += chunk;
-        });
-
-        response.on('end', () => {
-            if (response.statusCode === 403) {
-                res.status(403).json({ status: 'error', message: `Accesso non autorizzato per il token ${process.env.PAYTWEAK_SECRET_KEY}` });
-            } else {
-                res.status(200).json({ status: 'ok', data });
-            }
-        });
-    });
-
-    request.on('error', (error) => {
-        res.status(500).json({ status: 'error', error: error.message });
-    });
-
-    request.write(postData);
-    request.end();
 };
 
 module.exports = {
-    createPayment,
+  createPayment,
 };
