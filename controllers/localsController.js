@@ -51,7 +51,6 @@ const getOwnerLocal = async (req, res) => {
     }
 };
 
-
 const createLocal = async (req, res) => {
     const local = await Local.create(req.body)
     res.status(StatusCodes.CREATED).json({ local })

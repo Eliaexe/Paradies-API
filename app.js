@@ -62,14 +62,11 @@ const firebaseAnalytics = require('./config/firebase');
 // Routers
 const authRouter = require('./routes/authRoutes');
 const userRouter = require('./routes/userRoutes');
-const productRouter = require('./routes/productRoutes');
-const reviewRouter = require('./routes/reviewRoutes');
 const orderRouter = require('./routes/orderRoutes');
-const checkoutRoute = require('./routes/checkoutRoutes');
-const stripeRoute = require('./routes/stripeRoutes')
 const paymentRoutes = require('./routes/paymentRoutes')
 const localsRoutes = require('./routes/localsRoutes')
 const uploadRouter = require('./routes/uploadRouter')
+const mainRouter = require('./routes/mainRoutes')
 
 // Middleware
 const notFoundMiddleware = require('./middleware/not-found');
@@ -94,8 +91,8 @@ app.use(
   helmet.contentSecurityPolicy({
     directives: {
       defaultSrc: ["'self'"],
-      scriptSrc: ["'self'", 'js.stripe.com', 'eliaexe.github.io'],
-      styleSrc: ["'self'", 'js.stripe.com', 'unsafe-inline'], 
+      scriptSrc: ["'self'", 'https://ptwkdev.link/', 'eliaexe.github.io'],
+      styleSrc: ["'self'", 'https://ptwkdev.link/', 'unsafe-inline'], 
       imgSrc: ["'self'", 'data:'],
       fontSrc: ["'self'", 'fonts.googleapis.com'],
     },
@@ -123,14 +120,11 @@ app.use(express.static('./public'));
 
 app.use('/api/v1/auth', authRouter);
 app.use('/api/v1/profiles', userRouter);
-app.use('/api/v1/products', productRouter);
-app.use('/api/v1/reviews', reviewRouter);
-app.use('/api/v1/orders', orderRouter);
-app.use('/api/v1/checkout', checkoutRoute);
-app.use('/api/v1/stripe-webhook', paymentRoutes);
-app.use('/api/v1/payment', paymentRoutes)
 app.use('/api/v1/locals', localsRoutes)
 app.use('/api/v1/upload', uploadRouter);
+app.use('/api/v1/orders', orderRouter);
+app.use('/api/v1/payment', paymentRoutes)
+app.use('/api/v1/main', mainRouter)
 
 app.use(notFoundMiddleware);
 app.use(errorHandlerMiddleware);
