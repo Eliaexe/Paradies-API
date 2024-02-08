@@ -1,6 +1,7 @@
 const https = require('https');
 require('dotenv').config();
 const PaytweakWrapper = require('../config/paytweak');
+const { log } = require('console');
 
 let connectionResults = null;
 
@@ -24,7 +25,7 @@ const createPayment = async (req, res) => {
     const paymentData = {
       'order_id': req.body.order_id,
       'amount': Number(req.body.amount),
-      'cart': JSON.stringify(cartData)
+      'cart': JSON.stringify(cartData),
     };
 
     try {
@@ -53,6 +54,13 @@ function isTokenExpired(birthToken) {
   return differenceInMinutes >= 10; // Restituisci true se la chiave è scaduta
 }
 
+const paymentCallBack = async (req, res) => {
+  
+
+  console.log(req.body);
+}
+
 module.exports = {
   createPayment,
+  paymentCallBack
 };

@@ -1,11 +1,17 @@
 const express = require('express');
 const router = express.Router();
 
-const { createPayment } = require('../controllers/paymentController');
+const { createPayment,
+        paymentCallBack
+} = require('../controllers/paymentController');
 
 router
     .route('/')
     .post(createPayment);
+
+router
+    .route('/callback')
+    .post(paymentCallBack)
 
 
 module.exports = router;
