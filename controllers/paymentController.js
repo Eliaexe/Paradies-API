@@ -1,7 +1,7 @@
 const https = require('https');
 require('dotenv').config();
 const PaytweakWrapper = require('../config/paytweak');
-const { log } = require('console');
+const Order = require('../models/Order');
 
 let connectionResults = null;
 
@@ -32,7 +32,6 @@ const createPayment = async (req, res) => {
       const paymentRequestResults = await paytweak.makePayments(paymentData);
       // console.log(paymentRequestResults);
       let useThisPayment = JSON.parse(paymentRequestResults)
-      console.log(useThisPayment);
       // Puoi gestire la risposta come necessario
       // res.redirect(useThisPayment.url)
       res.status(200).json({ url: useThisPayment.url });
@@ -55,10 +54,36 @@ function isTokenExpired(birthToken) {
 }
 
 const paymentCallBack = async (req, res) => {
-  
+  const { order_id: orderId, status: theStatus } = req.body;
 
-  console.log(req.body);
-}
+  let orderStatus = '';
+
+  switch (theStatus) {
+    case '5':
+      orderStatus = 'paid';
+      break;
+
+    default:
+      // Handle other status values as needed
+      break;
+  }
+
+  try {
+    const order = await Order.findOne({ _id: orderId });
+
+    if (!order) {
+      throw new CustomError.NotFoundError(`No order with id: ${orderId}`);
+    }
+
+    order.status = orderStatus;
+    await order.save();
+
+    res.send('Order status updated successfully');
+  } catch (error) {
+    console.error(error);
+    res.status(500).send('Error updating order status');
+  }
+};
 
 module.exports = {
   createPayment,
