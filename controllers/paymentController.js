@@ -6,7 +6,6 @@ const Order = require('../models/Order');
 let connectionResults = null;
 
 const createPayment = async (req, res) => {
-  // Verifica se la chiave è già stata creata e se è ancora valida
   const paytweak = new PaytweakWrapper(process.env.PAYTWEAK_PUBLIC_KEY, process.env.PAYTWEAK_SECRET_KEY);
   // if (!connectionResults || isTokenExpired(connectionResults.birthToken)) {
     connectionResults = await paytweak.apiConnect();
@@ -30,10 +29,16 @@ const createPayment = async (req, res) => {
 
     try {
       const paymentRequestResults = await paytweak.makePayments(paymentData);
-      // console.log(paymentRequestResults);
       let useThisPayment = JSON.parse(paymentRequestResults)
-      // Puoi gestire la risposta come necessario
-      // res.redirect(useThisPayment.url)
+      const order = await Order.findOne({ _id: paymentData.order_id });
+
+      if (!order) {
+        throw new CustomError.NotFoundError(`No order with id: ${paymentData.order_id}`);
+      }
+
+      order.paymentIntentId = useThisPayment.url.split('/')[3]
+      await order.save();
+
       res.status(200).json({ url: useThisPayment.url });
     } catch (error) {
       console.error('Errore durante la richiesta di pagamento:', error);
@@ -58,25 +63,24 @@ const paymentCallBack = async (req, res) => {
 
   let orderStatus = '';
 
-  switch (theStatus) {
-    case '5':
-      orderStatus = 'paid';
-      break;
-
-    default:
-      // Handle other status values as needed
-      break;
+  if (theStatus == 5) {
+    orderStatus = 'paid'
+  } else {
+    orderStatus = 'failed'
   }
 
   try {
     const order = await Order.findOne({ _id: orderId });
 
+    console.log(order, 'did i find the order?');
     if (!order) {
       throw new CustomError.NotFoundError(`No order with id: ${orderId}`);
     }
 
     order.status = orderStatus;
+
     await order.save();
+    console.log(order, 'the order is updated?');
 
     res.send('Order status updated successfully');
   } catch (error) {

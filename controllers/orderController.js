@@ -90,11 +90,25 @@ const getAllOrders = async (req, res) => {
 };
 
 const getSingleOrder = async (req, res) => {
-  const { id: orderId } = req.params;
-  const order = await Order.findOne({ _id: orderId });
-  if (!order) {
-    throw new CustomError.NotFoundError(`No order with id : ${orderId}`);
+  const { value } = req.params;
+
+  let criteria = {}
+  const searchCriteria = () => {
+    if (value.length == 24) {
+      criteria = {'_id': value}
+    } else {
+      criteria = {'paymentIntentId': value}
+    }
   }
+ 
+  const order = await Order.findOne(criteria);
+
+  if (!order) {
+    throw new CustomError.NotFoundError(
+      `No order found matching either _id: '${id}' or paymentIntentId: '${paymentIntentId}'`
+    );
+  }
+
   checkPermissions(req.user, order.user);
   res.status(StatusCodes.OK).json({ order });
 };

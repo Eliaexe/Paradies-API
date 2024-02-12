@@ -73,7 +73,7 @@ const notFoundMiddleware = require('./middleware/not-found');
 const errorHandlerMiddleware = require('./middleware/error-handler');
 
 const corsOptions = {
-  origin: ['https://nextjs-paradis.vercel.app', 'http://localhost:3000' ],
+  origin: ['https://paradis-sand.vercel.app', 'https://nextjs-paradis.vercel.app', 'http://localhost:3000' ],
   credentials: true, 
 };
 
