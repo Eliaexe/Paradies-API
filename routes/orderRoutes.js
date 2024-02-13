@@ -1,5 +1,6 @@
 const express = require('express');
 const router = express.Router();
+
 const {
   authenticateUser,
   authorizePermissions,
@@ -11,7 +12,8 @@ const {
   getCurrentUserOrders,
   createOrder,
   updateOrder,
-  confirmOrder
+  confirmOrder,
+  getOrderPaymentStatus
 } = require('../controllers/orderController');
 
 router
@@ -30,7 +32,11 @@ router
   .get(authenticateUser, confirmOrder)
   .patch(authenticateUser, updateOrder);
 
-  router
+router
+  .route('/paymentStatus/:id')
+  .get(authenticateUser, getOrderPaymentStatus)
+
+router
   .route('/confirmOrder/:id')
   .get(authenticateUser, confirmOrder);
 

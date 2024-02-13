@@ -5,6 +5,8 @@ const Local = require('../models/Local')
 const { StatusCodes } = require('http-status-codes');
 const CustomError = require('../errors');
 const { checkPermissions } = require('../utils');
+const cache = require('node-cache');
+
 const QRCode = require('qrcode')
 
 // const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
@@ -90,6 +92,7 @@ const getAllOrders = async (req, res) => {
 };
 
 const getSingleOrder = async (req, res) => {
+  const cacheDisabled = true;
   const { value } = req.params;
 
   let criteria = {}
@@ -112,6 +115,24 @@ const getSingleOrder = async (req, res) => {
   checkPermissions(req.user, order.user);
   res.status(StatusCodes.OK).json({ order });
 };
+
+const getOrderPaymentStatus = async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    const order = await Order.findOne({ paymentIntentId: id });
+
+    if (!order) {
+      throw new CustomError.NotFoundError(`No order found with payment intent id: ${id}`);
+    }
+
+    res.status(StatusCodes.OK).json({ order });
+  } catch (error) {
+    console.error('Error fetching order payment status:', error);
+    res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ error: 'Internal Server Error' });
+  }
+};
+
 
 const getCurrentUserOrders = async (req, res) => {
   let orders
@@ -161,5 +182,6 @@ module.exports = {
   getCurrentUserOrders,
   createOrder,
   updateOrder,
-  confirmOrder
+  confirmOrder,
+  getOrderPaymentStatus
 };
