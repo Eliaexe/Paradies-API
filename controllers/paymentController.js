@@ -63,10 +63,10 @@ const paymentCallBack = async (req, res) => {
 
   let orderStatus = '';
 
-  if (theStatus == 5) {
+  if (theStatus == 5 || theStatus == 9) {
     orderStatus = 'paid'
-  } else {
-    orderStatus = 'failed'
+  } else if(theStatus == 51) {
+    orderStatus = 'pending'
   }
 
   try {
