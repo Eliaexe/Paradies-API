@@ -22,8 +22,9 @@ const mongoSanitize = require('express-mongo-sanitize');
 // Database
 const connectDB = require('./db/connect');
 
-// Firebase
-const firebaseAnalytics = require('./config/firebase');
+
+
+
 
 
     
@@ -41,12 +42,24 @@ const notFoundMiddleware = require('./middleware/not-found');
 const errorHandlerMiddleware = require('./middleware/error-handler');
 
 const corsOptions = {
-  origin: ['https://paradis-sand.vercel.app', 'https://nextjs-paradis.vercel.app', 'http://localhost:3000' ],
+  origin: ['http://localhost:3000', 'https://paradis-sand.vercel.app', 'https://nextjs-paradis.vercel.app' ],
   credentials: true, 
 };
 
 const mongoose = require('mongoose');
 mongoose.set('strictQuery', false);
+
+
+const storage = multer.diskStorage({
+  destination: './public/uploads/',
+  filename: (req, file, cb) => {
+    cb(null, Date.now() + '-' + file.originalname);
+  }
+});
+
+const upload = multer({ storage });
+
+
 
 app.set('trust proxy', 1);
 // app.use(
@@ -75,10 +88,10 @@ app.use(express.json({
 }));
 app.use(cookieParser(process.env.JWT_SECRET));
 
-app.use(express.static('./public'));
+app.use(express.static('./public')); 
 
 
-// MULTER
+// MULTER 
 
 app.use(fileUpload());
 
@@ -86,13 +99,29 @@ app.use(fileUpload());
 
 // passportConfig(passport);
 
+
 app.use('/api/v1/auth', authRouter);
 app.use('/api/v1/profiles', userRouter);
 app.use('/api/v1/locals', localsRoutes)
-app.use('/api/v1/upload', uploadRouter);
+// app.use('/api/v1/upload', uploadRouter);
 app.use('/api/v1/orders', orderRouter);
 app.use('/api/v1/payment', paymentRoutes)
 app.use('/api/v1/main', mainRouter)
+app.post('/api/v1/upload', upload.single('image'), (req, res) => {
+  console.log(req);
+  if (req.file) {
+    res.json({
+      success: true,
+      message: 'File caricato correttamente',
+      file: req.file.filename
+    });
+  } else {
+    res.json({
+      success: false,
+      message: 'Errore durante il caricamento del file'
+    });
+  }
+});
 
 app.use(notFoundMiddleware);
 app.use(errorHandlerMiddleware);
