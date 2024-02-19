@@ -3,30 +3,18 @@ require('express-async-errors');
 
 // express
 const express = require('express');
-const app = express();
 
 // Resto dei pacchetti (Middleware e altro)
-const morgan = require('morgan');
 const cookieParser = require('cookie-parser');
-const fileUpload = require('express-fileupload');
-// const rateLimiter = require('express-rate-limit');
-const multer = require('multer')
 const helmet = require('helmet');
 const xss = require('xss-clean');
 const cors = require('cors');
 const mongoSanitize = require('express-mongo-sanitize');
-// Passport
-// const passport = require('passport');  
-// const passportConfig = require('./config/passport-config');
+
+const app = express();
 
 // Database
 const connectDB = require('./db/connect');
-
-
-
-
-
-
     
 // Routers
 const authRouter = require('./routes/authRoutes');
@@ -49,25 +37,8 @@ const corsOptions = {
 const mongoose = require('mongoose');
 mongoose.set('strictQuery', false);
 
-
-const storage = multer.diskStorage({
-  destination: './public/uploads/',
-  filename: (req, file, cb) => {
-    cb(null, Date.now() + '-' + file.originalname);
-  }
-});
-
-const upload = multer({ storage });
-
-
-
 app.set('trust proxy', 1);
-// app.use(
-//   rateLimiter({
-//     windowMs: 15 * 60 * 1000,
-//     max: 60,
-//   })
-// );
+
 app.use(
   helmet.contentSecurityPolicy({
     directives: {
@@ -90,38 +61,13 @@ app.use(cookieParser(process.env.JWT_SECRET));
 
 app.use(express.static('./public')); 
 
-
-// MULTER 
-
-app.use(fileUpload());
-
-// Auth whit Passport.js 
-
-// passportConfig(passport);
-
-
 app.use('/api/v1/auth', authRouter);
 app.use('/api/v1/profiles', userRouter);
 app.use('/api/v1/locals', localsRoutes)
-// app.use('/api/v1/upload', uploadRouter);
+app.use('/api/v1/upload', uploadRouter);
 app.use('/api/v1/orders', orderRouter);
 app.use('/api/v1/payment', paymentRoutes)
 app.use('/api/v1/main', mainRouter)
-app.post('/api/v1/upload', upload.single('image'), (req, res) => {
-  console.log(req);
-  if (req.file) {
-    res.json({
-      success: true,
-      message: 'File caricato correttamente',
-      file: req.file.filename
-    });
-  } else {
-    res.json({
-      success: false,
-      message: 'Errore durante il caricamento del file'
-    });
-  }
-});
 
 app.use(notFoundMiddleware);
 app.use(errorHandlerMiddleware);
