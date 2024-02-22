@@ -5,13 +5,12 @@ const Local = require('../models/Local')
 const { StatusCodes } = require('http-status-codes');
 const CustomError = require('../errors');
 const { checkPermissions } = require('../utils');
-const cache = require('node-cache');
 
 const QRCode = require('qrcode')
 
 // const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
 
-const createOrder = async (req, res, clientSecret) => {
+const createOrder = async (req, res, io) => {
 
     try {
       const { localId, products, customerId } = req.body;
@@ -66,8 +65,7 @@ const createOrder = async (req, res, clientSecret) => {
   
       order.qrCode = qrCodeBase64;
       await order.save();
-  
-      // console.log('Order created successfully:', order);
+      req.io.emit('newOrder', order);
   
       res.status(StatusCodes.CREATED).json({
         success: true,

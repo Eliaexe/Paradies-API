@@ -1,5 +1,6 @@
 const express = require('express');
 const router = express.Router();
+const { io } = require('../app'); 
 
 const {
   authenticateUser,
@@ -18,7 +19,7 @@ const {
 
 router
   .route('/')
-  .post(authenticateUser, createOrder)
+  .post(authenticateUser, (req, res, io) => createOrder(req, res, io))
   .get(authenticateUser, authorizePermissions('admin'), getAllOrders);
 
 
