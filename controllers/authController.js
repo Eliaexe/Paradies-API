@@ -30,11 +30,13 @@ const login = async (req, res) => {
   const user = await User.findOne({ email });
 
   if (!user) {
-    throw new CustomError.UnauthenticatedError('Invalid Credentials');
+    res.status(StatusCodes.UNAUTHORIZED).json({ error: 'Invalid Credentials' });
+    return
   }
   const isPasswordCorrect = await user.comparePassword(password);
   if (!isPasswordCorrect) {
-    throw new CustomError.UnauthenticatedError('Invalid Credentials');
+    res.status(StatusCodes.UNAUTHORIZED).json({ error: 'Invalid Credentials' });
+    return
   }
   const tokenUser = createTokenUser(user);
   attachCookiesToResponse({ res, user: tokenUser });

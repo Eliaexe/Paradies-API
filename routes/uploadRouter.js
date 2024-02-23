@@ -2,13 +2,18 @@ const express = require('express');
 const router = express.Router();
 
 const path = require('path');
+const fs = require('fs');
 const multer = require('multer');
-
 
 // Configurazione per multer (modulo per gestire il caricamento di file)
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    cb(null, 'public/uploads/');
+    const uploadDir = 'public/uploads/';
+    // Verifica se la cartella di destinazione esiste, altrimenti crea la cartella
+    if (!fs.existsSync(uploadDir)) {
+      fs.mkdirSync(uploadDir, { recursive: true });
+    }
+    cb(null, uploadDir);
   },
   filename: function (req, file, cb) {
     cb(null, file.fieldname + '-' + Date.now() + path.extname(file.originalname));
@@ -31,8 +36,5 @@ router.post('/', upload.single('image'), (req, res) => {
     res.status(500).json({ error: 'Si è verificato un errore durante l\'upload del file' });
   }
 });
-
-
-// router.post('/', upload.single('image'), uploadController.uploadFile);
 
 module.exports = router;
