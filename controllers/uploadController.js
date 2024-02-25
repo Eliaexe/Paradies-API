@@ -2,7 +2,6 @@
 
   const uploadFile = (req, res) => {
     try {
-
       if (!req.file) {
         return res.status(400).json({ error: 'Nessun file caricato.' });
       }

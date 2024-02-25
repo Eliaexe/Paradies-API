@@ -8,18 +8,60 @@ const register = async (req, res) => {
 
   const emailAlreadyExists = await User.findOne({ email });
   if (emailAlreadyExists) {
-    throw new CustomError.BadRequestError('Email already exists');
+    res.status(400).json({ error: 'An account with this email already exists.' });
+    return
   }
 
-  // first registered user is an admin
-  const isFirstAccount = (await User.countDocuments({})) === 0;
-  // const theRole = isFirstAccount ? 'admin' : role;
+  if (!first_name || !last_name || !email || !password || !age || !style_of_music || !gender || !role) {
+    res.status(400).json({ error: 'Please provide all required information.' });
+    return;
+  }
 
-  const user = await User.create({ first_name, last_name, email, password, age, style_of_music, role, gender });
-  const tokenUser = createTokenUser(user);
-  attachCookiesToResponse({ res, user: tokenUser });
-  res.status(StatusCodes.CREATED).json({ user: tokenUser });
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  if (!emailRegex.test(email)) {
+    res.status(400).json({ error: 'Please provide a valid email address.' });
+    return;
+  }
+
+  if (password.length < 6) {
+    res.status(400).json({ error: 'Please provide a password with at least 8 characters.' });
+    return;
+  }
+
+  const parsedAge = Number(age);
+  if (isNaN(parsedAge) || parsedAge < 18) {
+    res.status(400).json({ error: 'You must be at least 18 years old to register.' });
+    return;
+  }
+
+  if (!style_of_music || typeof style_of_music ==! String ) {
+    res.status(400).json({ error: 'Please select a valid style of music.' });
+    return;
+  }
+
+  const allowedGenders = ['male', 'female', 'other'];
+  if (!allowedGenders.includes(gender)) {
+      res.status(400).json({ error: 'Please select a valid gender.' });
+      return;
+  }
+
+  const allowedRoles = ['admin', 'user'];
+  if (!allowedRoles.includes(role)) {
+      res.status(400).json({ error: 'Please select a valid role.' });
+      return;
+  }
+
+  try {
+    const user = await User.create({ first_name, last_name, email, password, age, style_of_music, role, gender });
+    const tokenUser = createTokenUser(user);
+    attachCookiesToResponse({ res, user: tokenUser });
+    res.status(201).json({ user: tokenUser });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Internal server error.' });
+  }
 };
+
 
 const login = async (req, res) => {
   const { email, password } = req.body;

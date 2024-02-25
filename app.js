@@ -1,7 +1,7 @@
 const express = require('express');
 const http = require('http');
 const socketIo = require('socket.io');
-const cors = require('cors'); // Aggiunto il middleware CORS
+const cors = require('cors'); 
 
 const cookieParser = require('cookie-parser');
 const helmet = require('helmet');
@@ -34,6 +34,11 @@ const paymentRoutes = require('./routes/paymentRoutes');
 const localsRoutes = require('./routes/localsRoutes');
 const uploadRouter = require('./routes/uploadRouter');
 const mainRouter = require('./routes/mainRoutes');
+
+const {verifyBarman,
+       handleOrderStatus,
+       allRelevanOrders
+      } = require('./controllers/socket/barmar')
 
 // Middleware
 const notFoundMiddleware = require('./middleware/not-found');
@@ -78,10 +83,32 @@ app.use('/api/v1/main', mainRouter);
 app.use(notFoundMiddleware);
 app.use(errorHandlerMiddleware);
 
-// Inizializzazione del server WebSocket
-io.on('connection', (socket) => {
-  console.log('New WebSocket connection');
-  // Gestisci gli eventi WebSocket qui
+io.on('connection', async (socket) => {
+  const headers = socket.handshake.headers;
+  const isVerified = await verifyBarman(headers['user']);
+
+  if (isVerified) {
+    socket.emit('ordersToStart', isVerified)
+  } else {
+    socket.disconnect(true)
+  }
+
+  socket.on('confirmOrder', async (data) => {
+    let managedOrder = await handleOrderStatus(data, 'delivered', io)
+
+    if (managedOrder == 'error') {
+      socket.emit('error', {error: 'error updating order'})
+    }
+  })
+
+  socket.on('refresh', async (data) => {
+    const sendThis = await allRelevanOrders(data)
+    socket.emit('ordersToStart', sendThis)
+  })
+
+  socket.on('cancelOrder', (data) => {
+    handleOrderStatus(data, 'canceled', io)
+  })
 });
 
 // Avvio del server
