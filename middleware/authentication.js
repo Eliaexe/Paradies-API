@@ -5,7 +5,7 @@ const authenticateUser = async (req, res, next) => {
   const token = req.signedCookies.token;
 
   if (!token) {
-    res.status(401).json({'error': 'Authentication Invalid'})
+    return
   }
 
   try {
@@ -13,7 +13,7 @@ const authenticateUser = async (req, res, next) => {
     req.user = { name, userId, role };
     next();
   } catch (error) {
-    res.status(401).json({'error': 'Authentication Invalid'})
+    return
   }
 };
 
