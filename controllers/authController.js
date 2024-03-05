@@ -45,7 +45,7 @@ const register = async (req, res) => {
       return;
   }
 
-  const allowedRoles = ['business', 'user'];
+  const allowedRoles = ['business', 'client'];
   if (!allowedRoles.includes(role)) {
       res.status(400).json({ error: 'Please select a valid role.' });
       return;
